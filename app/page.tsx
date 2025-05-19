@@ -1,24 +1,20 @@
+import NewFolioForm from "./ui/root/form";
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen grid-rows-[20px_1fr_20px] items-center justify-center p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col gap-5">
-        <span>
-          <h1 className="text-5xl leading-[1] font-bold">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 p-8 font-[family-name:var(--font-geist-sans)] sm:p-20">
+      <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-8 shadow-lg">
+        <div className="mb-8 text-center">
+          <h1 className="mb-3 text-3xl font-bold text-slate-800">
             Generador de Folios
           </h1>
-          {/* <p className="text-lg leading-[1.5]">
+          <p className="text-sm text-slate-500">
             Generador de folios para actas de entrega de ayudas asistenciales
-          </p> */}
-        </span>
-        <span className="grid grow grid-cols-2 gap-5">
-          <button className="h-11 grow rounded-lg bg-slate-800 px-8">
-            Generar
-          </button>
-          <p className="flex items-center rounded-lg border border-slate-700 px-3.5">
-            4CB2C53D-25-DO
           </p>
-        </span>
-      </main>
-    </div>
+        </div>
+
+        <NewFolioForm />
+      </div>
+    </main>
   );
 }
