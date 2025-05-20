@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { pool } from "./db";
 
 export async function generateFolio(
@@ -25,6 +26,7 @@ export async function generateFolio(
     );
 
     await client.query("COMMIT");
+    revalidatePath("/");
     return { success: true, folio };
   } catch (error) {
     await client.query("ROLLBACK");
