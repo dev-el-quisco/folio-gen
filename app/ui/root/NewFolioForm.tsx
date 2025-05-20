@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { generateFolio } from "../../libs/actions";
-import { toast, Toaster } from "react-hot-toast";
+import { toast, Toaster } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function NewFolioForm() {
   const [code, setCode] = useState("");
   const [folio, setFolio] = useState("");
+  const route = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,30 +18,31 @@ export default function NewFolioForm() {
       return;
     }
 
-    toast.promise(
-      generateFolio(code).then((response) => {
-        if (!response.success) {
-          throw new Error(response.message);
-        }
-        setFolio(response.folio || "");
-        return response;
-      }),
-      {
-        loading: "Generando folio...",
-        success: "Folio generado exitosamente",
-        error: (err) =>
-          `Error: ${err.message || "No se pudo generar el folio"}`,
-      },
-    );
+    const toastId = toast.loading("Generando folio...");
+
+    try {
+      const response = await generateFolio(code);
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+      toast.success("Folio generado exitosamente", { id: toastId });
+      setFolio(response.folio || "");
+      route.refresh();
+    } catch (error) {
+      toast.error(
+        `Error: ${(error as Error).message || "No se pudo generar el folio"}`,
+        { id: toastId },
+      );
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
       <Toaster position="top-center" />
-      <div className="flex items-center justify-between overflow-hidden rounded-lg bg-slate-50 shadow-sm">
+      <div className="flex h-11 items-center justify-between overflow-hidden rounded-md border border-slate-100 bg-slate-50">
         <label
           htmlFor="code"
-          className="h-full w-[40%] grow p-4 text-sm font-medium text-slate-600"
+          className="w-[25%] grow px-4 text-sm font-medium text-slate-600"
         >
           Código:
         </label>
@@ -50,22 +53,22 @@ export default function NewFolioForm() {
           maxLength={2}
           placeholder="TA"
           onChange={(e) => setCode(e.target.value.toUpperCase())}
-          className="w-[60%] bg-white p-4 text-right font-mono text-lg font-semibold text-slate-700 ring-slate-300 outline-none"
+          className="h-full w-[75%] bg-white px-4 text-right font-mono font-semibold text-slate-700 ring-slate-300 outline-none"
         />
       </div>
 
-      <div className="flex items-center justify-between rounded-lg bg-slate-50 p-4 shadow-sm">
+      <div className="flex h-11 items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-4">
         <span className="text-sm font-medium text-slate-600">
           Folio generado:
         </span>
-        <span className="font-mono text-lg font-semibold text-slate-800">
+        <span className="font-mono font-semibold text-slate-800">
           {folio || "---"}
         </span>
       </div>
 
       <button
         type="submit"
-        className="mt-2 w-full cursor-pointer rounded-lg bg-slate-800 px-8 py-3.5 font-medium text-white transition-all hover:bg-slate-700 focus:outline-none active:scale-[0.98] active:transform"
+        className="mt-1 h-11 w-full cursor-pointer rounded-md bg-slate-800 text-sm text-white transition-all hover:bg-slate-700 focus:outline-none active:scale-[0.98] active:transform"
       >
         Generar nuevo folio
       </button>

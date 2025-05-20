@@ -7,19 +7,22 @@ export interface Folio {
   fecha: Date;
 }
 
-/**
- * Obtiene los últimos 5 folios creados ordenados por fecha de creación descendente
- * @returns Promise con un array de los últimos 5 folios
- */
+// Devuelve los últimos 5 folios en orden descendente
 export async function getLatestFolios(): Promise<Folio[]> {
   const client = await pool.connect();
 
   try {
     const result = await client.query(
-      "SELECT folio, fecha FROM folios ORDER BY fecha DESC LIMIT 5",
+      "SELECT folio, fecha AT TIME ZONE 'UTC' as fecha FROM folios ORDER BY fecha DESC LIMIT 5",
     );
 
-    return result.rows;
+    // Convert the PostgreSQL timestamp to JavaScript Date objects
+    const folios = result.rows.map((row) => ({
+      folio: row.folio,
+      fecha: new Date(row.fecha),
+    }));
+
+    return folios;
   } catch (error) {
     console.error("Error al obtener los últimos folios:", error);
     return [];
