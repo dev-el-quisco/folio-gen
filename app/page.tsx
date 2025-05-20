@@ -1,4 +1,5 @@
-import NewFolioForm from "./ui/root/form";
+import FoliosTable from "./ui/root/FoliosTable";
+import NewFolioForm from "./ui/root/NewFolioForm";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         </div>
 
         <NewFolioForm />
+        <FoliosTable />
       </div>
     </main>
   );

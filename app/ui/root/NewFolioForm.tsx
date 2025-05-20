@@ -35,7 +35,7 @@ export default function NewFolioForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
       <div className="flex items-center justify-between overflow-hidden rounded-lg bg-slate-50 shadow-sm">
         <label
           htmlFor="code"
@@ -48,6 +48,7 @@ export default function NewFolioForm() {
           type="text"
           value={code}
           maxLength={2}
+          placeholder="TA"
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           className="w-[60%] bg-white p-4 text-right font-mono text-lg font-semibold text-slate-700 ring-slate-300 outline-none"
         />

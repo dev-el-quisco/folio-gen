@@ -7,19 +7,6 @@ export async function generateFolio(
 ): Promise<{ success: boolean; folio?: string; message?: string }> {
   const client = await pool.connect();
 
-  // try {
-  //   const result = await client.query(
-  //     "SELECT generate_unique_folio($1) AS folio",
-  //     [code],
-  //   );
-  //   return { success: true, folio: result.rows[0].folio };
-  // } catch (error) {
-  //   console.error("Error al generar el folio:", error);
-  //   return { success: false, message: "Error al generar el folio" };
-  // } finally {
-  //   client.release();
-  // }
-
   try {
     await client.query("BEGIN");
     const result = await client.query(
@@ -33,7 +20,8 @@ export async function generateFolio(
     }
 
     await client.query(
-      "INSERT INTO folios (folio, fecha) VALUES ($1, now() at time zone \'UTC\')",
+      "INSERT INTO folios (folio, fecha) VALUES ($1, now() at time zone 'UTC')",
+      [folio],
     );
 
     await client.query("COMMIT");
